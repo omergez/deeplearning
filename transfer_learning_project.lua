@@ -1,3 +1,5 @@
+require('mobdebug').start()
+
 require 'nn'
 require 'image'
 require 'optim'
