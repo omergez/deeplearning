@@ -5,14 +5,14 @@ require 'optim'
 logger = optim.Logger('Transfer.log') -- logger can be changed  
 logger:setNames{'Trainset Error', 'Testset Error'}
 
-local numClasses = 2
+local NumClasses = 8
 
 dataset = torch.load('flowers.t7')
 
-dataset = dataset:narrow(1,1,numClasses)
+dataset = dataset:narrow(1,1,NumClasses)
 
-classes = torch.range(1,numClasses):totable()
-labels = torch.range(1,numClasses):view(numClasses,1):expand(17,80)
+classes = torch.range(1,NumClasses):totable()
+labels = torch.range(1,NumClasses):view(NumClasses,1):expand(17,80)
 
 print('dataset size:')
 print(dataset:size()) --each class has 80 images of 3x128x128
