@@ -50,23 +50,36 @@ testLabels = testLabels:float()
 testData:add(-mean):div(std)
 
 
--- -- Load GoogLeNet
--- googLeNet = torch.load('GoogLeNet_v2_nn.t7')
+-- Load GoogLeNet
+googLeNet = torch.load('GoogLeNet_v2_nn.t7')
 
--- -- The new network
--- model = nn.Sequential()
+-- The new network
+model = nn.Sequential()
 
--- for i=1,10 do
---     local layer = googLeNet:get(i):clone()
---     layer.parameters = function() return {} end --disable parameters
---     layer.accGradParamters = nil --remove accGradParamters
---     model:add(layer)
--- end
+for i=1,10 do
+    local layer = googLeNet:get(i):clone()
+    layer.parameters = function() return {} end --disable parameters
+    layer.accGradParamters = nil --remove accGradParamters
+    model:add(layer)
+end
 
--- -- Check output dimensions with random input
--- model:float()
--- local y = model:forward(torch.rand(1,3,128,128):float())
--- print(y:size())
+-- Check output dimensions with random input
+model:float()
+local y = model:forward(torch.rand(1,3,128,128):float())
 
--- -- Add the new layers
+print('Google net size:')
+print(y:size())
+
+-- Add the new layers
+
+model:add(nn.SpatialConvolution(320, 16, 3, 3))
+model:add(nn.ReLU())
+model:add(nn.SpatialMaxPooling(4,4,4,4))
+model:add(nn.View(16*3*3)) 
+model:add(nn.Dropout())
+model:add(nn.Linear(16*3*3, NumClasses))  
+model:add(nn.LogSoftMax())
+model:float() 
+print(tostring(model))
+
 
