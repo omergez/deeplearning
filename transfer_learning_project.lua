@@ -9,7 +9,7 @@ local numClasses = 8
 
 dataset = torch.load('flowers.t7')
 
-dataset = dataset:narrow(1,1,NumClasses)
+dataset = dataset:narrow(1,1,numClasses)
 
 classes = torch.range(1,numClasses):totable()
 labels = torch.range(1,numClasses):view(numClasses,1):expand(17,80)
