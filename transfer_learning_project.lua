@@ -5,10 +5,14 @@ require 'optim'
 logger = optim.Logger('Transfer.log') -- logger can be changed  
 logger:setNames{'Trainset Error', 'Testset Error'}
 
+local numClasses = 8
 
 dataset = torch.load('flowers.t7')
-classes = torch.range(1,17):totable() --17 classes
-labels = torch.range(1,17):view(17,1):expand(17,80)
+
+dataset = dataset:narrow(1,1,NumClasses)
+
+classes = torch.range(1,numClasses):totable()
+labels = torch.range(1,numClasses):view(numClasses,1):expand(17,80)
 
 print('dataset size:')
 print(dataset:size()) --each class has 80 images of 3x128x128
@@ -46,23 +50,23 @@ testLabels = testLabels:float()
 testData:add(-mean):div(std)
 
 
--- Load GoogLeNet
-googLeNet = torch.load('GoogLeNet_v2_nn.t7')
+-- -- Load GoogLeNet
+-- googLeNet = torch.load('GoogLeNet_v2_nn.t7')
 
--- The new network
-model = nn.Sequential()
+-- -- The new network
+-- model = nn.Sequential()
 
-for i=1,10 do
-    local layer = googLeNet:get(i):clone()
-    layer.parameters = function() return {} end --disable parameters
-    layer.accGradParamters = nil --remove accGradParamters
-    model:add(layer)
-end
+-- for i=1,10 do
+--     local layer = googLeNet:get(i):clone()
+--     layer.parameters = function() return {} end --disable parameters
+--     layer.accGradParamters = nil --remove accGradParamters
+--     model:add(layer)
+-- end
 
--- Check output dimensions with random input
-model:float()
-local y = model:forward(torch.rand(1,3,128,128):float())
-print(y:size())
+-- -- Check output dimensions with random input
+-- model:float()
+-- local y = model:forward(torch.rand(1,3,128,128):float())
+-- print(y:size())
 
--- Add the new layers
+-- -- Add the new layers
 
