@@ -9,7 +9,10 @@ logger:setNames{'Trainset Error', 'Testset Error'}
 dataset = torch.load('flowers.t7')
 classes = torch.range(1,17):totable() --17 classes
 labels = torch.range(1,17):view(17,1):expand(17,80)
-print('dataset size:' .. dataset:size()) --each class has 80 images of 3x128x128
+
+print('dataset size:')
+print(dataset:size()) --each class has 80 images of 3x128x128
+
 image.display(dataset:select(2,3))
 
 function shuffle(data,ydata) --shuffle data function
@@ -25,13 +28,17 @@ trainSize = 0.85 * shuffledData:size(1)
 trainData, testData = unpack(shuffledData:split(trainSize, 1))
 trainLabels, testLabels = unpack(shuffledLabels:split(trainSize, 1))
 
-print('tain data size:' .. trainData:size())
+print('tain data size:')
+print(trainData:size())
 
 trainData = trainData:float() -- convert the data from a ByteTensor to a float Tensor.
 trainLabels = trainLabels:float()
 
 mean, std = trainData:mean(), trainData:std()
+
+print('mwan, std:')
 print(mean, std)
+
 trainData:add(-mean):div(std)
     
 testData = testData:float()
