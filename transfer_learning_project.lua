@@ -94,7 +94,7 @@ print('Number of parameters:', w:nElement())
 batchSize = 32
 epochs = 200
 optimState = {
-    learningRate = 0.001,
+    learningRate = 0.1,
     
 }
 
