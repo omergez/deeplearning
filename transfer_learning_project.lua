@@ -5,7 +5,7 @@ require 'optim'
 logger = optim.Logger('Transfer.log') -- logger can be changed  
 logger:setNames{'Trainset Error', 'Testset Error'}
 
-local numClasses = 8
+local numClasses = 4
 
 dataset = torch.load('flowers.t7')
 
@@ -82,4 +82,97 @@ model:add(nn.LogSoftMax())
 model:float() 
 print(tostring(model))
 
+-- Ex3 start --
 
+
+-- Loss Function = Negative Log Likelihood ()
+lossFunc = nn.ClassNLLCriterion():float() 
+w, dE_dw = model:getParameters()
+
+print('Number of parameters:', w:nElement())
+
+batchSize = 32
+epochs = 200
+optimState = {
+    learningRate = 0.1,
+    
+}
+
+
+
+function forwardNet(data, labels, train)
+    --another helpful function of optim is ConfusionMatrix
+    local confusion = optim.ConfusionMatrix(torch.range(1,numClasses):totable())
+    local lossAcc = 0
+    local numBatches = 0
+    if train then
+        --set network into training mode
+        model:training()
+    end
+    
+        
+        numBatches = numBatches + 1
+        local x = data:narrow(1, 1, batchSize):float()
+        local yt = labels:narrow(1, 1, batchSize):float()
+        local y = model:forward(x)
+        local err = lossFunc:forward(y, yt)
+        lossAcc = lossAcc + err
+        confusion:batchAdd(y,yt)
+        
+        if train then
+            function feval()
+                model:zeroGradParameters() --zero grads
+                local dE_dy = lossFunc:backward(y,yt)
+                model:backward(x, dE_dy) -- backpropagation
+            
+                return err, dE_dw
+            end
+            
+            --optim.adagrad(feval, w, optimState)
+            optim.adam(feval, w, optimState)
+            
+ 
+        end
+    
+    
+    confusion:updateValids()
+    local avgLoss = lossAcc / numBatches
+    local avgError = 1 - confusion.totalValid
+    
+    return avgLoss, avgError, tostring(confusion) 
+end
+
+trainLoss = torch.Tensor(epochs)
+testLoss = torch.Tensor(epochs)
+trainError = torch.Tensor(epochs)
+testError = torch.Tensor(epochs)
+
+
+for e = 1, epochs do
+    trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
+    trainLoss[e], trainError[e] = forwardNet(trainData, trainLabels, true)
+    testLoss[e], testError[e], confusion = forwardNet(testData, testLabels, false)
+    logger:add{trainError[e],testError[e]} -- loss is the value which you want to plot
+    logger:style{'-','-'}   -- the style of your line, as in MATLAB, we use '-' or '|' etc.
+ 
+        print('Epoch ' .. e .. ':')
+        print('Training error: ' .. trainError[e], 'Training Loss: ' .. trainLoss[e])
+        print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
+        print(confusion)
+        
+        if (testError[e]<=0.1)
+        then 
+        	print("EARLY STOPPING")
+          	break
+        end
+    
+end
+
+   image.display(trainData:narrow(1,1,10))  
+   print("Train Labels : ")
+   print(trainLabels:narrow(1,1,10))
+   local z = model:forward(torch.rand(1,3,128,128):float())
+   print("logsoftmax:",z)
+
+   
+logger:plot()
