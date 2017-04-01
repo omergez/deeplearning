@@ -5,7 +5,7 @@ require 'optim'
 logger = optim.Logger('Transfer.log') -- logger can be changed  
 logger:setNames{'Trainset Error', 'Testset Error'}
 
-local numClasses = 4
+local numClasses = 12
 
 dataset = torch.load('flowers.t7')
 
@@ -94,7 +94,7 @@ print('Number of parameters:', w:nElement())
 batchSize = 32
 epochs = 200
 optimState = {
-    learningRate = 0.1,
+    learningRate = 0.001,
     
 }
 
