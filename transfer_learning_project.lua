@@ -5,7 +5,7 @@ require 'optim'
 logger = optim.Logger('Transfer.log') -- logger can be changed  
 logger:setNames{'Trainset Error', 'Testset Error'}
 
-local numClasses = 12
+local numClasses = 8
 
 dataset = torch.load('flowers.t7')
 
@@ -164,7 +164,7 @@ for e = 1, epochs do
         
         if ((numClasses==4 and testError[e]<=0.1)
           or (numClasses==8 and testError[e]<=0.15)
-          or (numClasses>=12 and testError[e]<=0.2))
+          or ((numClasses>=12 or numClasses>=16) and testError[e]<=0.2))
         then print("EARLY STOPPING") --EARLY STOPPING
           
           break
