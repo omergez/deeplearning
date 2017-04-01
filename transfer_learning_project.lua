@@ -162,9 +162,9 @@ for e = 1, epochs do
         print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
         print(confusion)
         
-        if ((NumClasses==4 and testError[e]<=0.1)
-          or (NumClasses==8 and testError[e]<=0.15)
-          or (NumClasses>=12 and testError[e]<=0.2))
+        if ((numClasses==4 and testError[e]<=0.1)
+          or (numClasses==8 and testError[e]<=0.15)
+          or (numClasses>=12 and testError[e]<=0.2))
         then print("EARLY STOPPING") --EARLY STOPPING
           
           break
