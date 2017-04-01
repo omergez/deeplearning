@@ -94,7 +94,7 @@ print('Number of parameters:', w:nElement())
 batchSize = 32
 epochs = 200
 optimState = {
-    learningRate = 0.1,
+    learningRate = 0.001,
     
 }
 
@@ -155,6 +155,8 @@ for e = 1, epochs do
     logger:add{trainError[e],testError[e]} -- loss is the value which you want to plot
     logger:style{'-','-'}   -- the style of your line, as in MATLAB, we use '-' or '|' etc.
  
+ 		print('------------------------------------------')
+ 		print('------------------------------------------')
         print('Epoch ' .. e .. ':')
         print('Training error: ' .. trainError[e], 'Training Loss: ' .. trainLoss[e])
         print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
@@ -165,6 +167,9 @@ for e = 1, epochs do
         	print("EARLY STOPPING")
           	break
         end
+
+        print('------------------------------------------')
+        print('------------------------------------------')
     
 end
 
