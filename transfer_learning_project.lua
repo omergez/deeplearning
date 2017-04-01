@@ -5,7 +5,7 @@ require 'optim'
 logger = optim.Logger('Transfer.log') -- logger can be changed  
 logger:setNames{'Trainset Error', 'Testset Error'}
 
-local numClasses = 16
+local numClasses = 12
 
 dataset = torch.load('flowers.t7')
 
