@@ -185,7 +185,7 @@ end
    print("Train classes label: ")
    print(trainLabels:narrow(1,1,10))
 
-   local z = model:forward(torch.rand(1,3,128,128):exp():sum():float())
+   local z = model:forward(torch.rand(1,3,128,128):float()):exp():sum()
    
    print("LogSoftMax:")
    print(z)
