@@ -181,10 +181,14 @@ for e = 1, epochs do
 end
 
    image.display(trainData:narrow(1,1,10))  
-   print("Train Labels : ")
+
+   print("Train classes label: ")
    print(trainLabels:narrow(1,1,10))
+
    local z = model:forward(torch.rand(1,3,128,128):float())
-   print("logsoftmax:",z)
+   
+   print("LogSoftMax:")
+   print(z)
 
    
 logger:plot()
