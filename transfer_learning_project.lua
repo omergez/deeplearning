@@ -5,7 +5,7 @@ require 'optim'
 logger = optim.Logger('Transfer.log') -- logger can be changed  
 logger:setNames{'Trainset Error', 'Testset Error'}
 
-local numClasses = 8
+local numClasses = 4
 
 dataset = torch.load('flowers.t7')
 
@@ -185,7 +185,7 @@ end
    print("Train classes label: ")
    print(trainLabels:narrow(1,1,10))
 
-   local z = model:forward(torch.rand(1,3,128,128):float():exp():sum())
+   local z = model:forward(torch.rand(1,3,128,128):exp():sum():float())
    
    print("LogSoftMax:")
    print(z)
