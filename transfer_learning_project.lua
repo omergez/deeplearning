@@ -147,6 +147,14 @@ testLoss = torch.Tensor(epochs)
 trainError = torch.Tensor(epochs)
 testError = torch.Tensor(epochs)
 
+function isEarlyStopping(testError)
+	if (numClasses == 4 and testError <= 0.1) then return true end
+	if (numClasses == 8 and testError <= 0.15) then return true end 
+	if (numClasses == 12 and testError <= 0.2) then return true end
+	if (numClasses == 16 and testError <= 0.2) then return true end
+
+	return false
+end
 
 for e = 1, epochs do
     trainData, trainLabels = shuffle(trainData, trainLabels) --shuffle training data
@@ -162,13 +170,9 @@ for e = 1, epochs do
         print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
         print(confusion)
         
-        if ((numClasses==4 and testError[e]<=0.1)
-          or (numClasses==8 and testError[e]<=0.15)
-          or ((numClasses>=12 or numClasses>=16) and testError[e]<=0.2))
-        then print("EARLY STOPPING") --EARLY STOPPING
-          
-          break
-          
+        if (isEarlyStopping(testError[e]) then 
+        	print("Early Stopping")
+          	break
         end
 
         print('------------------------------------------')
