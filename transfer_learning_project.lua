@@ -72,7 +72,7 @@ print(y:size())
 
 -- Add the new layers
 
-model:add(nn.SpatialConvolution(320, numClasses, 3, 3))
+model:add(nn.SpatialConvolution(320, 16, 3, 3))
 model:add(nn.ReLU())
 model:add(nn.SpatialMaxPooling(4,4,4,4))
 model:add(nn.View(16*3*3)) 
