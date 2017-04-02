@@ -5,7 +5,7 @@ require 'optim'
 logger = optim.Logger('Transfer.log') -- logger can be changed  
 logger:setNames{'Trainset Error', 'Testset Error'}
 
-local numClasses = 16
+local numClasses = 4
 
 dataset = torch.load('flowers.t7')
 
@@ -170,7 +170,7 @@ for e = 1, epochs do
         print('Test error: ' .. testError[e], 'Test Loss: ' .. testLoss[e])
         print(confusion)
         
-        if (isEarlyStopping(testError[e])) then 
+        if isEarlyStopping(testError[e]) then 
         	print("Early Stopping")
           	break
         end
